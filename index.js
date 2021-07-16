@@ -5,17 +5,19 @@ const config = require("./johanna.json");
 const oidLibrary = {
   "default": require("./oids/_defaults.json"),
   "unifi.switch": require("./oids/unifi.switch.json"),
+  "unifi.ap": require("./oids/unifi.ap.json"),
 }
 
 class Manager {
   constructor(config){
     this.config = config;
-    this.sessions = {};
+    this.sessions = new Map();
   }
 
   start(){
     for (const device of this.config.devices) {
-      this.sessions[device] = new Device(device.ip, device.community || "public", device.libraries),
+      let deviceInstance = new Device(device.ip, device.community || "public", device.libraries);
+      this.sessions.set(deviceInstance.hostname, deviceInstance);
       console.log(`Started connection to ${device.ip}`);
     }
   }
@@ -29,12 +31,12 @@ class Device {
       ...oidLibrary.default,
       ...oidLibrary[libraries]
     };
-    console.log(this.oids);
     this.session = snmp.createSession(ip, communityName);
     this.buffer = {};
 
     setInterval(async () => {
       this.fetch(this.session, this.oids);
+      console.log(this.buffer);
     }, 1000);
   }
 
@@ -46,12 +48,14 @@ class Device {
     return new Promise(resolve => {
       let garbage = {};
       session.get(Object.values(oids), (error, varbinds) => {
-        if (error) resolve(error);
+        if (error) {
+          resolve(error)
+          console.log(error);
+        };
         for (let i in varbinds) {
           if (snmp.isVarbindError(varbinds[i])) console.error(snmp.varbindError(varbinds[i]));
           else garbage[Object.keys(oids)[i]] = varbinds[i].value.toString();
         }
-        console.log(garbage);
         resolve(garbage);
       });
     });
