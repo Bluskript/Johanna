@@ -3,6 +3,7 @@ const config = require("./johanna.json");
 const connectToXornet = require("./util/connectToXornet");
 const getLocation = require("./util/getLocation");
 const { v4: uuidv4 } = require("uuid");
+const fs = require("fs");
 
 // TODO: Make this auto import with FS
 const oidLibrary = {
@@ -33,8 +34,11 @@ class Manager {
   async start(){
     for (const device of this.config.devices) {
       console.log(`Started connection to ${device.ip}`);
-      let deviceUUID = uuidv4().replace(/-/g, "");
-      this.devices.set(deviceUUID, new Device(deviceUUID, device.type, device.ip, device.community || "public", device.libraries));
+      if(!device.uuid) {
+        device.uuid = uuidv4().replace(/-/g, "");
+        fs.writeFileSync("./johanna.json", JSON.stringify(config, null, 2));
+      }
+      this.devices.set(device.uuid, new Device(device.uuid, device.type, device.ip, device.community || "public", device.libraries));
       Promise.resolve();
     }
   }
@@ -95,6 +99,8 @@ class Device {
     return this.buffer;
   }
 }
+
+
 
 async function main(){
   const location = await getLocation();

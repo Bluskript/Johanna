@@ -2,35 +2,40 @@
   "devices": [
     {
       "ip": "10.0.0.1",
-      "type": "router"
+      "type": "router",
+      "uuid": "aa021335afc0488381ef3cebc6f07df6"
     },
     {
       "ip": "10.0.0.2",
       "type": "switch",
       "libraries": [
         "unifi.switch"
-      ]
+      ],
+      "uuid": "faad53ff737940da97a5443638de21dd"
     },
     {
       "ip": "10.0.0.3",
       "type": "switch",
       "libraries": [
         "unifi.switch"
-      ]
+      ],
+      "uuid": "3e91138ffb794b2aa2536d45e6936596"
     },
     {
       "ip": "10.0.0.4",
       "type": "ap",
       "libraries": [
         "unifi.ap"
-      ]
+      ],
+      "uuid": "00dc607c25c44ba79334b209249b2091"
     },
     {
       "ip": "10.0.0.5",
       "type": "ap",
       "libraries": [
         "unifi.ap"
-      ]
+      ],
+      "uuid": "4ffb307fb50d4ac59dd569b2bc60e96f"
     }
   ]
 }
