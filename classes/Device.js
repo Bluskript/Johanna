@@ -5,6 +5,7 @@ const oidLibrary = {
   default: require("../oids/_defaults.json"),
   "unifi.switch": require("../oids/unifi.switch.json"),
   "unifi.ap": require("../oids/unifi.ap.json"),
+  "idrac":  require("../oids/idrac.json"),
 };
 
 /**
