@@ -15,7 +15,7 @@ module.exports = async function connectToXornet(token) {
       },
     });
     socket.on("connect", () => {
-      console.log(`🌊 Connected to Xornet - ${process.env.BACKEND_WS_URL}\n`.cyan)
+      console.log(`🌊 Connected to Xornet - ${process.env.BACKEND_WS_URL}\n`.cyan);
       resolve(socket);
     });
   });

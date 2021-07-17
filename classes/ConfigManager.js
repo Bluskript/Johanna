@@ -1,7 +1,7 @@
 const fs = require("fs");
 const uuidRegex = /[0-9a-f]{32}/g;
 const { v4: uuidv4 } = require("uuid");
-JSON.fix = require('json-fixer');
+JSON.fix = require("json-fixer");
 
 /**
  * This class loads, parses & fixes
@@ -20,6 +20,12 @@ module.exports = class ConfigManager {
    */
   loadConfigs() {
     console.log(`Loading configurations \n`.yellow);
+
+    // Check if folder exists
+    if (!fs.existsSync("./configs")) {
+      fs.mkdirSync("configs");
+      console.log(` ⚡ Created configuration folder`);
+    }
 
     for (let file of fs.readdirSync("./configs").filter((file) => file.endsWith("johanna.json"))) {
       // Load config
@@ -58,12 +64,11 @@ module.exports = class ConfigManager {
    * @author George Tsotsos
    */
   checkAndLoadConfig(file) {
-
     try {
       var config = JSON.parse(fs.readFileSync("./configs/" + file));
     } catch (error) {
       console.log(` 🛠️  Fixing configuration syntax: ${file}`.red);
-      const {data, changed}= JSON.fix(fs.readFileSync("./configs/" + file, 'utf-8'), {verbose: false});
+      const { data, changed } = JSON.fix(fs.readFileSync("./configs/" + file, "utf-8"), { verbose: false });
       var config = data;
       this.save(file, config);
     }
@@ -79,7 +84,7 @@ module.exports = class ConfigManager {
     return config;
   }
 
-  save(file, newConfig){
+  save(file, newConfig) {
     fs.writeFileSync("./configs/" + file, JSON.stringify(newConfig, null, 2));
   }
 };

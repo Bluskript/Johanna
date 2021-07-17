@@ -7,12 +7,12 @@ const fs = require("fs");
  * @author George Tsotsos
  */
 module.exports = class JohannaConfig {
-  constructor(){
+  constructor() {
     this.config = this.loadConfig();
     if (!this.config) this.createNew();
   }
 
-  loadConfig(){
+  loadConfig() {
     try {
       return JSON.parse(fs.readFileSync("./johanna.json"));
     } catch (error) {
@@ -20,15 +20,15 @@ module.exports = class JohannaConfig {
     }
   }
 
-  createNew(){
+  createNew() {
     this.config = {
       username: "",
       password: "",
-    }
+    };
     this.save();
   }
 
-  save(){
+  save() {
     fs.writeFileSync("./johanna.json", JSON.stringify(this.config, null, 2));
   }
-}
+};
