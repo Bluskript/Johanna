@@ -1,7 +1,11 @@
 {
+  "uuid": "65585e4ddac64484b87224700a7962ff",
   "ip": "10.0.0.2",
   "type": "switch",
   "libraries": [
     "unifi.switch"
-  ]
+  ],
+  "name": "switch16",
+  "file": "switch16.johanna.json",
+  "filename": "switch16.johanna.json"
 }

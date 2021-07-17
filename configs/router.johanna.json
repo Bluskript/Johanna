@@ -1,4 +1,7 @@
 {
+  "uuid": "4b80997682254bc9ae8dd2e10e0f1397",
   "ip": "10.0.0.1",
-  "type": "router"
+  "type": "router",
+  "name": "router",
+  "filename": "router.johanna.json"
 }

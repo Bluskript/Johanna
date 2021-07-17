@@ -1,7 +1,10 @@
 {
+  "uuid": "e3391d09ec874b5784df49c7bcbfa83f",
   "ip": "10.0.0.4",
   "type": "ap",
   "libraries": [
     "unifi.ap"
-  ]
+  ],
+  "name": "accesspoint1",
+  "filename": "accesspoint1.johanna.json"
 }
