@@ -1,6 +1,6 @@
 {
   "name": "johanna",
-  "version": "0.1.4",
+  "version": "0.1.31",
   "description": "SMTP Trap for interfacing with SMTP Devices for Xornet.",
   "main": "index.js",
   "scripts": {
