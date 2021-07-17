@@ -13,7 +13,7 @@ module.exports = async function connectToXornet(location) {
         type: "johanna",
       },
     });
-    console.log("🌊 Connected to Xornet".cyan);
+    console.log("🌊 Connected to Xornet \n".cyan);
     resolve(socket);
   });
 };

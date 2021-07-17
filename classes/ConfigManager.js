@@ -20,17 +20,17 @@ module.exports = class ConfigManager {
   loadConfigs(){
     console.log(`Loading configurations \n`.yellow);
 
-    for (let file of fs.readdirSync("./configs")){
+    for (let file of fs.readdirSync("./configs").filter(file => file.endsWith("johanna.json"))){
 
       // Load config
       let config = JSON.parse(fs.readFileSync("./configs/" + file));
 
+      // Check if the config is okay
+      this.check(config, file);
+
       // Get the name of the device the user has set
       config.name = this.getDeviceName(file);
       config.filename = file;
-
-      // Check if the config is okay
-      this.check(config);
 
       this.configs.push(config);
       console.log(` ⚡ Loaded configuration: ${file.yellow}`);
@@ -55,18 +55,19 @@ module.exports = class ConfigManager {
   /**
    * checks if a config has a uuid and or syntax errors and fixes them
    * @param {json} config the config to check
+   * @param {string} filename the filename of the config
    * @author George Tsotsos
    */
-  check(config){
+  check(config, filename){
     // If theres no UUID or the UUID is invalid for the machine add it or fix it
     if (!config.uuid || !config.uuid.match(uuidRegex)) {
       // Generate the new UUID
       const newConfig = {...config, uuid: uuidv4().replace(/-/g, "")};
 
-      console.log(` 🛠️  Fixing configuration: ${config.filename}`.red);
+      console.log(` 🛠️  Fixing configuration: ${filename}`.red);
       
       // Save the new config
-      fs.writeFileSync("./configs/" + config.filename, JSON.stringify(newConfig, null, 2));
+      fs.writeFileSync("./configs/" + filename, JSON.stringify(newConfig, null, 2));
     }
   }
 }

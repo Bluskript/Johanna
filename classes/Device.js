@@ -25,9 +25,8 @@ module.exports = class Device {
       ...oidLibrary.default,
       ...oidLibrary[libraries]
     };
-    this.session = snmp.createSession(ip, communityName);
+    this.session = snmp.createSession(ip, communityName);  
     this.buffer = {};
-
     setInterval(async () => {
       this.fetch(this.session, this.oids);
     }, 1000);
@@ -53,7 +52,7 @@ module.exports = class Device {
       session.get(Object.values(oids), (error, varbinds) => {
         if (error) {
           resolve(error)
-          console.log(error);
+          console.log(` ❌ ${this.ip.red} timed out, check configuration, is the IP valid?`);
         };
         for (let i in varbinds) {
           if (snmp.isVarbindError(varbinds[i])) console.error(snmp.varbindError(varbinds[i]));
