@@ -9,7 +9,7 @@ module.exports = async function connectToXornet(token) {
     let socket = io.connect(process.env.BACKEND_WS_URL, {
       reconnect: true,
       auth: {
-        location: await getLocation(),
+        geolocation: await getLocation(),
         type: "johanna",
         token,
       },
