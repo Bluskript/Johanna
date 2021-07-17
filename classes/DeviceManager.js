@@ -17,7 +17,7 @@ module.exports = class DeviceManager {
 
     for (const device of this.configs) {
       console.log(` ☄️  Started connection to ${device.name.blue} - ${device.ip.blue}`);
-      this.devices.set(device.uuid, new Device(device.uuid, device.type, device.ip, device.community || "public", device.libraries));
+      this.devices.set(device.uuid, new Device(device.uuid, device.type, device.ip, device.community || "public", device.library));
     }
     console.log("\n");
     Promise.resolve();

@@ -2,7 +2,5 @@
   "uuid": "73d5a7198b7a4f8ba83ab56484a3adcf",
   "ip": "10.0.0.3",
   "type": "switch",
-  "libraries": [
-    "unifi.switch"
-  ]
+  "library": "unifi.switch"
 }
