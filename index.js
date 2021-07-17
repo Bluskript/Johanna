@@ -1,8 +1,19 @@
+require("colors");
+const version = require("./package.json").version;
 const snmp = require("net-snmp");
-const config = require("./johanna.json");
+const fs = require('fs');
 const connectToXornet = require("./util/connectToXornet");
 const getLocation = require("./util/getLocation");
 const { v4: uuidv4 } = require("uuid");
+console.clear();
+
+console.log(`
+         __      __                           
+        / /___  / /_  ____ _____  ____  ____ _
+   __  / / __ \\/ __ \\/ __ \`/ __ \\/ __ \\/ __ \`/
+  / /_/ / /_/ / / / / /_/ / / / / / / / /_/ / 
+  \\____/\\____/_/ /_/\\__,_/_/ /_/_/ /_/\\__,_/  v${version}
+\n`.cyan)
 
 // TODO: Make this auto import with FS
 const oidLibrary = {
@@ -20,23 +31,22 @@ process.env.BACKEND_WS_URL = process.env.NODE_ENV.trim() === "development" ? "ws
  * @author George Tsotsos
  */
 class Manager {
-  constructor(config){
-    this.config = config;
+  constructor(configs){
+    this.configs = configs;
     this.devices = new Map();
-
-    setInterval(() => {
-      console.log(`Currently buffering ${this.devices.length} devices`);
-    }, 5000);
-
+    this.start();
   }
 
   async start(){
-    for (const device of this.config.devices) {
-      console.log(`Started connection to ${device.ip}`);
+    console.log(`Connecting to devices \n`.blue);
+  
+    for (const device of this.configs) {
+      console.log(` ☄️  Started connection to ${device.name.blue} - ${device.ip.blue}`);
       let deviceUUID = uuidv4().replace(/-/g, "");
       this.devices.set(deviceUUID, new Device(deviceUUID, device.type, device.ip, device.community || "public", device.libraries));
-      Promise.resolve();
     }
+    console.log('\n');
+    Promise.resolve();
   }
 }
 
@@ -74,6 +84,12 @@ class Device {
     };
   }
 
+  /**
+   * Gets SNMP data from a device
+   * @param {Session} session the tcp session with the device
+   * @param {*} oids the oids to get data of
+   * @author George Tsotsos
+   */
   async get(session, oids){
     return new Promise(resolve => {
       let garbage = {};
@@ -96,16 +112,51 @@ class Device {
   }
 }
 
+/**
+ * Gets device's name based on the config's name
+ * @param {string} johannaConfigFile the filename of the config
+ * @author George Tsotsos
+ */
+function getDeviceName(johannaConfigFile){
+  name = johannaConfigFile.split(".");
+  name.pop();
+  name.pop();
+  name = name.join("");
+  return name;
+}
+
+/**
+ * Loads all the configs from the ./config folder
+ * @author George Tsotsos
+ */
+function loadConfigs(){
+  const configs = [];
+  console.log(`Loading configurations \n`.yellow);
+
+  for (file of fs.readdirSync("./configs")){
+    let config = JSON.parse(fs.readFileSync("./configs/" + file));
+    config.name = getDeviceName(file);
+    configs.push(config);
+    console.log(` ⚡ Loaded configuration: ${file.yellow}`);
+  };
+
+  console.log('\n');
+  return configs;
+}
+
+/**
+ * Main entry function
+ * @author George Tsotsos
+ */
 async function main(){
   const location = await getLocation();
-  const Johanna = new Manager(config);
-  Johanna.start();
+  const configs = loadConfigs();
+  const Johanna = new Manager(configs);
   const socket = await connectToXornet(location);
 
   setInterval(() => {
     socket.emit("data", Array.from(Johanna.devices.values()).map(device => device.buffer));
   }, 1000);
-
 }
 
 main();
