@@ -4,8 +4,5 @@
   "type": "switch",
   "libraries": [
     "unifi.switch"
-  ],
-  "name": "switch16",
-  "file": "switch16.johanna.json",
-  "filename": "switch16.johanna.json"
+  ]
 }

@@ -4,8 +4,5 @@
   "type": "ap",
   "libraries": [
     "unifi.ap"
-  ],
-  "name": "accesspoint2",
-  "file": "accesspoint2.johanna.json",
-  "filename": "accesspoint2.johanna.json"
+  ]
 }
