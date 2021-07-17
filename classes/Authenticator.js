@@ -1,7 +1,6 @@
 const axios = require('axios');
 const fs = require('fs');
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-const JohannaConfig = require("../johanna.json");
 /** 
  * This class is used to authenticate users and get their access token.
  * @user Login Username
@@ -10,17 +9,18 @@ const JohannaConfig = require("../johanna.json");
  * @author Connor O'Keefe
 */
 module.exports = class Authenticator {
-    constructor() {
+    constructor(johannaConfig) {
+        this.johannaConfig = johannaConfig,
         this.token = null;
         this.user = null;
         this.password = null;
         this.host = process.env.BACKEND_URL;
     }
 
-
     /**
      * @param user The username of the user
      * @param password The password of the user
+     * @author Connor O'Keefe
      */
     async authenticate(user, password) {
         this.user = user;
@@ -30,7 +30,6 @@ module.exports = class Authenticator {
                 username: this.user,
                 password: this.password
             });
-            console.log(response.data.message);
             this.token = response.data.token; 
             this.saveToken();
         } catch (error) {
@@ -46,13 +45,21 @@ module.exports = class Authenticator {
             await this.login();
         }
     }
-    
+
+    /**
+     * Logs in the backend and gets a token
+     * @author Connor O'Keefe
+     */
     async login() {
-        await this.authenticate(JohannaConfig.username, JohannaConfig.password);
+        await this.authenticate(this.johannaConfig.username, this.johannaConfig.password);
     }
 
+    /**
+     * Saves the token in the johanna.json
+     * @author Connor O'Keefe
+     */
     saveToken() {
-        fs.writeFileSync(process.env.MAIN_CONFIG, JSON.stringify({ ...JohannaConfig, token: this.token, }, null, 2))
+        fs.writeFileSync(process.env.MAIN_CONFIG, JSON.stringify({ ...this.johannaConfig, token: this.token, }, null, 2))
     }
 
     getToken() {

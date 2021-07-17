@@ -29,6 +29,8 @@ module.exports = {
       TxPackets: parseInt(report.radio_tx_packets),
       RxPackets: parseInt(report.radio_rx_packets),
     }
+    report.cpu = parseInt(report.cpu);
+
     return report;
   },
   'idrac': (report) => {    

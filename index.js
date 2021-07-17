@@ -1,9 +1,11 @@
 require("colors");
 const version = require("./package.json").version;
-const connectToXornet = require("./util/connectToXornet");
+const JohannaConfig = require("./classes/JohannaConfig");
 const DeviceManager = require("./classes/DeviceManager");
 const ConfigManager = require("./classes/ConfigManager");
 const Authenticator = require("./classes/Authenticator");
+const connectToXornet = require("./util/connectToXornet");
+
 console.clear();
 
 console.log(
@@ -25,7 +27,8 @@ process.env.MAIN_CONFIG = "johanna.json";
  * @author George Tsotsos
  */
 async function main() {
-  const authenticator = new Authenticator();
+  const johannaConfig = new JohannaConfig();
+  const authenticator = new Authenticator(johannaConfig.config);
   await authenticator.login();
   const configManager = new ConfigManager();
   const deviceManager = new DeviceManager(configManager.configs);
