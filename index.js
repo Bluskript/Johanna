@@ -28,8 +28,8 @@ async function main() {
   const authenticator = new Authenticator();
   await authenticator.login();
   const configManager = new ConfigManager();
-  const deviceManager = new DeviceManager(configManager.configs, authenticator.getToken());
-  const socket = await connectToXornet();
+  const deviceManager = new DeviceManager(configManager.configs);
+  const socket = await connectToXornet(authenticator.getToken());
 
   setInterval(() => {
     const devicesData = Array.from(deviceManager.devices.values()).map((device) => device.buffer);
