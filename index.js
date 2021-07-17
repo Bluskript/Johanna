@@ -4,6 +4,7 @@ const snmp = require("net-snmp");
 const fs = require('fs');
 const connectToXornet = require("./util/connectToXornet");
 const getLocation = require("./util/getLocation");
+const uuidRegex = /[0-9a-f]{32}/g;
 const { v4: uuidv4 } = require("uuid");
 console.clear();
 
@@ -42,8 +43,7 @@ class Manager {
   
     for (const device of this.configs) {
       console.log(` ☄️  Started connection to ${device.name.blue} - ${device.ip.blue}`);
-      let deviceUUID = uuidv4().replace(/-/g, "");
-      this.devices.set(deviceUUID, new Device(deviceUUID, device.type, device.ip, device.community || "public", device.libraries));
+      this.devices.set(device.uuid, new Device(device.uuid, device.type, device.ip, device.community || "public", device.libraries));
     }
     console.log('\n');
     Promise.resolve();
@@ -124,6 +124,23 @@ function getDeviceName(johannaConfigFile){
   name = name.join("");
   return name;
 }
+/**
+ * checks if a config has a uuid and or syntax errors and fixes them
+ * @param {json} config the config to check
+ * @author George Tsotsos
+ */
+function checkConfig(config){
+  // If theres no UUID or the UUID is invalid for the machine add it or fix it
+  if (!config.uuid || !config.uuid.match(uuidRegex)) {
+    // Generate the new UUID
+    const newConfig = {...config, uuid: uuidv4().replace(/-/g, "")};
+
+    console.log(` 🛠️  Fixing configuration: ${config.filename}`.red);
+    
+    // Save the new config
+    fs.writeFileSync("./configs/" + file, JSON.stringify(newConfig, null, 2));
+  }
+}
 
 /**
  * Loads all the configs from the ./config folder
@@ -134,8 +151,17 @@ function loadConfigs(){
   console.log(`Loading configurations \n`.yellow);
 
   for (file of fs.readdirSync("./configs")){
+
+    // Load config
     let config = JSON.parse(fs.readFileSync("./configs/" + file));
+
+    // Get the name of the device the user has set
     config.name = getDeviceName(file);
+    config.filename = file;
+
+    // Check if the config is okay
+    checkConfig(config);
+
     configs.push(config);
     console.log(` ⚡ Loaded configuration: ${file.yellow}`);
   };
