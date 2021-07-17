@@ -2,10 +2,10 @@ const snmp = require("net-snmp");
 
 // TODO: Make this auto import with FS
 const oidLibrary = {
-  "default": require("../oids/_defaults.json"),
+  default: require("../oids/_defaults.json"),
   "unifi.switch": require("../oids/unifi.switch.json"),
   "unifi.ap": require("../oids/unifi.ap.json"),
-}
+};
 
 /**
  * The device class that makes a connection to a SNMP device
@@ -23,20 +23,20 @@ module.exports = class Device {
     this.communityName = communityName;
     this.oids = {
       ...oidLibrary.default,
-      ...oidLibrary[libraries]
+      ...oidLibrary[libraries],
     };
-    this.session = snmp.createSession(ip, communityName);  
+    this.session = snmp.createSession(ip, communityName);
     this.buffer = {};
     setInterval(async () => {
       this.fetch(this.session, this.oids);
     }, 1000);
   }
 
-  async fetch(){
+  async fetch() {
     this.buffer = {
       uuid: this.uuid,
       type: this.type,
-      ...await this.get(this.session, this.oids)
+      ...(await this.get(this.session, this.oids)),
     };
   }
 
@@ -46,14 +46,14 @@ module.exports = class Device {
    * @param {*} oids the oids to get data of
    * @author George Tsotsos
    */
-  async get(session, oids){
-    return new Promise(resolve => {
+  async get(session, oids) {
+    return new Promise((resolve) => {
       let garbage = {};
       session.get(Object.values(oids), (error, varbinds) => {
         if (error) {
-          resolve(error)
+          resolve(error);
           console.log(` ❌ ${this.ip.red} timed out, check configuration, is the IP valid?`);
-        };
+        }
         for (let i in varbinds) {
           if (snmp.isVarbindError(varbinds[i])) console.error(snmp.varbindError(varbinds[i]));
           else garbage[Object.keys(oids)[i]] = varbinds[i].value.toString();
@@ -63,7 +63,7 @@ module.exports = class Device {
     });
   }
 
-  get data(){
+  get data() {
     return this.buffer;
   }
-}
+};
