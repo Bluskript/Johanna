@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		}
+	],
+	"settings": {
+		"material-icon-theme.files.associations": {
+			"johanna.json": "./extensions/icons/johanna",
+			"*.johanna.json": "./extensions/icons/johanna-config"
+		}
+	}
+}
