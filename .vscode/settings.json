@@ -1,6 +1,0 @@
-{
-  "material-icon-theme.files.associations": {
-    "johanna.json": "../../icons/johanna",
-    "*.johanna.json": "../../icons/johanna-config"
-  }
-}
