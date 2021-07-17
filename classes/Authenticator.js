@@ -52,7 +52,7 @@ module.exports = class Authenticator {
     }
 
     saveToken() {
-        fs.writeFileSync(process.env.MAIN_CONFIG, JSON.stringify({ token: this.token }, null, 2))
+        fs.writeFileSync(process.env.MAIN_CONFIG, JSON.stringify({ ...JohannaConfig, token: this.token, }, null, 2))
     }
 
     getToken() {
