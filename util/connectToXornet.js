@@ -13,7 +13,9 @@ module.exports = async function connectToXornet(location) {
         type: "johanna",
       },
     });
-    console.log("🌊 Connected to Xornet \n".cyan);
-    resolve(socket);
+    socket.on("connect", () => {
+      console.log(`🌊 Connected to Xornet - ${process.env.BACKEND_URL}\n`.cyan)
+      resolve(socket);
+    });
   });
 };

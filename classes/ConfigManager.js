@@ -1,6 +1,7 @@
 const fs = require("fs");
 const uuidRegex = /[0-9a-f]{32}/g;
 const { v4: uuidv4 } = require("uuid");
+JSON.fix = require('json-fixer');
 
 /**
  * This class loads, parses & fixes
@@ -22,10 +23,9 @@ module.exports = class ConfigManager {
 
     for (let file of fs.readdirSync("./configs").filter((file) => file.endsWith("johanna.json"))) {
       // Load config
-      let config = JSON.parse(fs.readFileSync("./configs/" + file));
 
       // Check if the config is okay
-      this.check(config, file);
+      let config = this.checkAndLoadConfig(file);
 
       // Get the name of the device the user has set
       config.name = this.getDeviceName(file);
@@ -54,19 +54,32 @@ module.exports = class ConfigManager {
   /**
    * checks if a config has a uuid and or syntax errors and fixes them
    * @param {json} config the config to check
-   * @param {string} filename the filename of the config
+   * @param {string} file the file of the config
    * @author George Tsotsos
    */
-  check(config, filename) {
+  checkAndLoadConfig(file) {
+
+    try {
+      var config = JSON.parse(fs.readFileSync("./configs/" + file));
+    } catch (error) {
+      console.log(` 🛠️  Fixing configuration syntax: ${file}`.red);
+      const {data, changed}= JSON.fix(fs.readFileSync("./configs/" + file, 'utf-8'), {verbose: false});
+      var config = data;
+      this.save(file, config);
+    }
+
     // If theres no UUID or the UUID is invalid for the machine add it or fix it
     if (!config.uuid || !config.uuid.match(uuidRegex)) {
       // Generate the new UUID
       const newConfig = { ...config, uuid: uuidv4().replace(/-/g, "") };
-
-      console.log(` 🛠️  Fixing configuration: ${filename}`.red);
-
-      // Save the new config
-      fs.writeFileSync("./configs/" + filename, JSON.stringify(newConfig, null, 2));
+      console.log(` 🛠️  Fixing UUID configuration: ${file}`.red);
+      this.save(file, newConfig);
     }
+
+    return config;
+  }
+
+  save(file, newConfig){
+    fs.writeFileSync("./configs/" + file, JSON.stringify(newConfig, null, 2));
   }
 };
