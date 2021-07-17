@@ -47,7 +47,7 @@ module.exports = class Device {
     // DeviceParsers based on the library the user has set in the johanna config
     DeviceParsers[this.library] ? (this.buffer = DeviceParsers[this.library](report)) : (this.buffer = report);
   }
-
+ 
   /**
    * Gets SNMP data from a device
    * @param {Session} session the tcp session with the device

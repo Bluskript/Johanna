@@ -12,27 +12,34 @@ function parseDefaults(report){
 module.exports = {
   'undefined': (report) => parseDefaults(report), // If the library is missing just parse the defaults
   'unifi.switch': (report) => {     
-    report = parseDefaults(report);                                                           // defaults
-    report.temperature = parseInt(report.temperature);                                        // '63',
-    report.fan_status = parseInt(report.fan_status);                                          // '0',
-    report.memory_free = parseInt(report.memory_free);                                        // '119200',
-    report.memory_total = parseInt(report.memory_total);                                      // '256252',
-    report.cpu_usage = parseFloat(report.cpu_usage.split("(")[1].trim().replace("%)", ""));   // '    5 Secs ( 29.9353%)   60 Secs ( 30.4123%)  300 Secs ( 30.4612%)'
+    report = parseDefaults(report);
+    report.temperature = parseInt(report.temperature);
+    report.fan_status = parseInt(report.fan_status);
+    report.ram = {
+      free: (parseInt(report.memory_free) / 1000 / 1000).toFixed(2),
+      total:  (parseInt(report.memory_total) / 1000 / 1000).toFixed(2),
+      used: ((parseInt(report.memory_total) - parseInt(report.memory_free))/ 1000 / 1000).toFixed(2),
+    }
+    report.cpu = parseInt(report.cpu_usage.split("(")[1].trim().replace("%)", ""));
     return report;
   },
   'unifi.ap': (report) => {
-    report = parseDefaults(report);                                                           // defaults
-    report.radio_rx_packets = parseInt(report.radio_rx_packets);                              // '2492713'
-    report.radio_tx_packets = parseInt(report.radio_tx_packets);                              // '69734'
+    report = parseDefaults(report);
+    report.radio = {
+      TxPackets: parseInt(report.radio_tx_packets),
+      RxPackets: parseInt(report.radio_rx_packets),
+    }
     return report;
   },
   'idrac': (report) => {    
-    report = parseDefaults(report);                                                           // defaults
-    report.system_board_inlet_temp = parseInt(report.system_board_inlet_temp) / 10;           // '270',
-    report.system_board_exhaust_temp = parseInt(report.system_board_exhaust_temp) / 10;       // '420',
-    report.system_board_power_consumption = parseInt(report.system_board_power_consumption);  // '98',
-    report.cpu1_temp = parseInt(report.cpu1_temp) / 10;                                       // '480',
-    report.cpu2_temp = parseInt(report.cpu2_temp) / 10;                                       // '510'
+    report = parseDefaults(report);
+    report.system_board_inlet_temp = parseInt(report.system_board_inlet_temp) / 10;
+    report.system_board_exhaust_temp = parseInt(report.system_board_exhaust_temp) / 10;
+    report.system_board_power_consumption = parseInt(report.system_board_power_consumption);
+    report.cpus = [
+      {temp: parseInt(report.cpu1_temp) / 10},
+      {temp: parseInt(report.cpu2_temp) / 10}
+    ]
     return report;
   }
 }
