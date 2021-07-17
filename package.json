@@ -1,20 +1,20 @@
 {
   "name": "johanna",
-  "version": "0.1.31",
+  "version": "0.1.33",
   "description": "SMTP Trap for interfacing with SMTP Devices for Xornet.",
   "main": "index.js",
   "scripts": {
     "dev": "set NODE_ENV=development && nodemon .",
     "staged": "set NODE_ENV=staged && nodemon .",
     "prettify": "npx prettier --write \"./**/*.js\"",
-    "compile-linux": "pkg -t \"node14-linux-x64\" bundle.js -o \"johanna-linux-v0.1.31.bin\" --compress Brotli",
-    "compile-macos": "pkg -t \"node14-macos-x64\" bundle.js -o \"johanna-macos-v0.1.31\" --compress Brotli",
-    "compile-win": "pkg -t \"node14-win-x64\" bundle.js -o \"johanna-win-v0.1.31\" --compress Brotli",
+    "compile-linux": "pkg -t \"node14-linux-x64\" bundle.js -o \"johanna-linux-v0.1.33.bin\" --compress Brotli",
+    "compile-macos": "pkg -t \"node14-macos-x64\" bundle.js -o \"johanna-macos-v0.1.33\" --compress Brotli",
+    "compile-win": "pkg -t \"node14-win-x64\" bundle.js -o \"johanna-win-v0.1.33\" --compress Brotli",
     "make-build-folder": "mkdir build",
-    "compress-linux": "bestzip build/johanna-linux-v0.1.31.zip johanna-linux-v0.1.31.bin",
-    "compress-macos": "bestzip build/johanna-macos-v0.1.31.zip johanna-macos-v0.1.31",
-    "compress-win": "bestzip build/johanna-win-v0.1.31.zip johanna-win-v0.1.31.exe",
-    "delete-binaries": "del johanna-win-v0.1.31.exe && del johanna-macos-v0.1.31 && del johanna-linux-v0.1.31.bin",
+    "compress-linux": "bestzip build/johanna-linux-v0.1.33.zip johanna-linux-v0.1.33.bin",
+    "compress-macos": "bestzip build/johanna-macos-v0.1.33.zip johanna-macos-v0.1.33",
+    "compress-win": "bestzip build/johanna-win-v0.1.33.zip johanna-win-v0.1.33.exe",
+    "delete-binaries": "del johanna-win-v0.1.33.exe && del johanna-macos-v0.1.33 && del johanna-linux-v0.1.33.bin",
     "build": "set NODE_ENV=production && npm run prettify && npm run compile-linux && npm run compile-macos && npm run compile-win && npm run make-build-folder && npm run compress-linux && npm run compress-macos && npm run compress-win && npm run delete-binaries"
   },
   "repository": {

@@ -27,8 +27,13 @@ module.exports = class ConfigManager {
       console.log(` ⚡ Created configuration folder`);
     }
 
+    let configFiles = fs.readdirSync('./configs');
+
+    if (configFiles.length == 0) {
+      console.log(` ⚡ You have no configurations in your configs folder!`.red)
+    };
+
     for (let file of fs.readdirSync("./configs").filter((file) => file.endsWith("johanna.json"))) {
-      // Load config
 
       // Check if the config is okay
       let config = this.checkAndLoadConfig(file);

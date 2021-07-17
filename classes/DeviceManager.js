@@ -13,6 +13,8 @@ module.exports = class DeviceManager {
   }
 
   async start() {
+    if (this.configs == 0) return;
+
     console.log(`Connecting to devices \n`.blue);
 
     for (const device of this.configs) {
