@@ -1,4 +1,5 @@
 const io = require("socket.io-client");
+const getLocation = require("./getLocation");
 
 /**
  * Connects to the Xornet Backend and sends system statistics every second.
@@ -8,7 +9,7 @@ module.exports = async function connectToXornet(location) {
     let socket = io.connect(process.env.BACKEND_WS_URL, {
       reconnect: true,
       auth: {
-        location,
+        location: await getLocation(),
         type: "johanna",
       },
     });
